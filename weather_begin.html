@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather</title>
+<!-- Don't forget to link to jQuery -->
+<style>
+	input{
+		margin: 10px 0px;
+		padding: 5px;
+	}
+	#forecast{
+		display: none;
+		text-align: center;
+		/*This div should not appear until the weather is returned.*/
+	}
+	#forecast div{
+		width: 25vw;
+		border: 8px solid blue;
+		margin: 0 auto;
+		background: black;
+	}
+	img{
+		width:100%;
+	}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+    function gettingJSON(){
+    	console.log("Hi")
+    	document.querySelector("div").style.display = "block";
+    	// Use the OpenWeather API to return:
+    	//  the current temperature  (id = temp)
+    	//  the high temperature for the day (id = high)
+    	//  the low temperature for the day (id = low)
+    	//  the icon for the current weather. 
+
+    	// You will need to update this query with the city, weather format (Celsius or Fahrenheit) and your OpenWeatherMap ID
+    	 
+    	// Right now I have it set to Chicago.  The default should be Ann Abor/Fahreheit.
+    	
+    	// var var_loc = "ann+arbor" //set ann arbor as the default for the variable var_loc (location)
+    	// var type_temp = "&units=imperial" 
+
+    	var type_temp = ''
+    		if (document.getElementById("fahrenheit").checked){
+    			type_temp = "&units=imperial"
+    		}
+    		else if (document.getElementById("celcius").checked){
+    			type_temp = "&units=metric"
+    			}
+    		else{
+    			type_temp = "&units=imperial"
+    		}
+    	// var_loc = document.getElementById("location").value //update locaiton value
+
+    	var loc = '' 
+			if (document.getElementById("location").value == ''){
+				var_loc = "ann+arbor"
+			} 
+			else {
+				var_loc = document.getElementById("location").value
+			}
+
+
+		let query = "http://api.openweathermap.org/data/2.5/weather?q=" + var_loc + type_temp + "&APPID="  + "42b4c6da9deab24dab528505837cdddb";
+        console.log("Query is :" + query)
+
+        // $.ajax({
+        // 	url: query,
+        // 	success: function(result){
+        // 		console.log(result)
+        // 		if('url' in result){
+        // 			$('img').attr("src", result.query)
+        // 		}
+        // 	}
+        // })
+
+        $.getJSON(query,function(json){
+            console.log(JSON.stringify(json));
+            console.log(JSON.stringify(json['main']));
+            // console.log(JSON.stringify(json['icon']))
+
+            var temp = JSON.stringify(json['main']['temp']);
+            var loc = JSON.stringify(json['name']);
+            var low = JSON.stringify(json['main']['temp_min']);
+            var high = JSON.stringify(json['main']['temp_max']);
+            var icon_loc = JSON.stringify(json.weather[0].icon).replace(/"/g, '')
+            var icon_url = 'http://openweathermap.org/img/wn/' + icon_loc + '.png';
+            // var icon = JSON.stringify(json['icon'])
+
+        	$("#loc").text(loc)
+        	$("#high").text(high)
+        	$("#low").text(low)
+        	$("#temp").text(temp)
+        	$("#tempImg").attr('src', icon_url)
+        	// $("#tempImg").show(icon)
+
+    })
+
+ //        document.querySelector("button").addEventListener("click", function(){
+ //    	document.querySelector("div").style.display = "block";
+ //    	// document.getElementById("tempImg").style.display = "icon"
+	// });
+
+
+    }
+    </script>
+</head>
+<body>
+	<!-- DO NOT CHANGE ANY CODE IN THE BODY OF THIS FILE. -->
+	<label for ="location">City:</label><input type = "text" id = "location"><br>
+	<input type = "radio" name = "temp" value = "imperial" id = "fahrenheit"> <label for = "fahrenheit">Fahrenheit</label><br>
+	<input type = "radio" name = "temp" value = "metric" id = "celcius"> <label for = "celcius">Celcius</label><br>
+
+	<button id = "getIt" onclick = "gettingJSON()">Get Weather</button>
+
+
+	<div id = "forecast">
+		<div>
+		<img id = "tempImg" src="" alt = "" title = "">
+		</div>
+		<p>The temperature in <span id = "loc"></span> is currently <span id = "temp"></span>.</p>
+		<p>The high today will be <span id = "high"></span> and the low will be <span id = "low"></span>.</p>
+		
+	</div>
+</body>
+</html>
