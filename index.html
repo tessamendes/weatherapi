@@ -87,7 +87,7 @@
             var low = JSON.stringify(json['main']['temp_min']);
             var high = JSON.stringify(json['main']['temp_max']);
             var icon_loc = JSON.stringify(json.weather[0].icon).replace(/"/g, '')
-            var icon_url = 'http://openweathermap.org/img/wn/' + icon_loc + '.png';
+            var icon_url = 'https://openweathermap.org/img/wn/' + icon_loc + '.png';
             // var icon = JSON.stringify(json['icon'])
 
         	$("#loc").text(loc)
